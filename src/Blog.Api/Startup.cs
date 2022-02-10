@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Blog.Infra.CrossCutting.IoC;
+using Microsoft.Extensions.Logging;
 
 namespace Blog.Api
 {
@@ -21,6 +22,7 @@ namespace Blog.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+            services.AddCorrelationId(Configuration);
 
             services.AddDbContext(Configuration);
 
@@ -32,7 +34,7 @@ namespace Blog.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory logger)
         {
             if (env.IsDevelopment())
             {
@@ -45,7 +47,7 @@ namespace Blog.Api
                 app.UseHsts();
             }
 
-            app.AddBuilder();
+            app.AddBuilder(logger);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
