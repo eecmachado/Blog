@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> userManager
+
+@model PostViewModel
+
+@{
+    bool differentUser = Model.UserId != userManager.GetUserId(User);
+}
+
+<div class="card card-comment" >
+    <div class="card-body">
+        <form asp-controller="Comment" asp-action="Edit" method="post">
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="UserId" type="hidden" />
+            <input asp-for="Created" type="hidden" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div>
+                <label asp-for="Title" class="control-label"></label>
+                @if (differentUser)
+                {
+                    <input asp-for="Title" class="form-control" readonly="readonly" disabled />
+                }
+                else
+                {
+                    <input asp-for="Title" class="form-control" />
+                }
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Message" class="control-label"></label>
+                @if (differentUser)
+                {
+                    <textarea asp-for="Message" class="form-control" rows="6" readonly="readonly" disabled></textarea>
+                }
+                else
+                {
+                    <textarea asp-for="Message" class="form-control" rows="6"></textarea>
+                }
+                <span asp-validation-for="Message" class="text-danger"></span>
+                <label>@Html.DisplayFor(item => item.Created)</label>
+                <label>@Html.DisplayFor(item => item.User.UserName)</label>
+            </div>
+            @if (!differentUser)
+            {
+                <div class="form-group">
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                </div>
+            }
+            <hr />
+        </form>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@model CommentViewModel
+
+@{
+    ViewData["Title"] = "";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="d-flex justify-content-center">
+        <div class="w-50">
+            @{
+                await Html.RenderPartialAsync("_PostComment", new CommentViewModel());
+            }
+        </div>
+    </div>
+
+    <div>
+        <section>
+            <div class="container row">
+                <div class="col-12">
+                    @foreach (var post in Model.Posts)
+                    {
+                        await Html.RenderPartialAsync("_Comment", post);
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+}
+
+
